@@ -10,25 +10,28 @@ already stubbed in the files below.
 
 | What | Path | State |
 | --- | --- | --- |
-| App tables | `drizzle/schema.ts` | Stub — add tables here |
-| DB client | `server/db.ts` → `getDb()`, `schema` | Stub — uncomment to enable |
+| App tables | `db/schema.ts` | Empty — add tables here |
+| DB client | `server/db.ts` → `getDb()`, `schema` | Netlify Drizzle adapter, already enabled |
 | CRUD pattern | `drizzle/crud-action-example.ts` | Copy into `actions/<name>.ts` |
-| Migrate | `pnpm db:generate` → `pnpm db:migrate` | `drizzle.config.ts` ships |
+| Migrate | `pnpm db:generate --name <descriptive_name>` → deploy | Netlify applies `netlify/database/migrations` |
 | Actions | `actions/<name>.ts` | You create these |
 
-Open `server/db.ts` and `drizzle/schema.ts` and edit them in place. Do **not**
+Open `db/schema.ts` and edit it in place. `drizzle/schema.ts` is a compatibility
+re-export, not a second schema. Do **not**
 `find` / `cat` over `node_modules/@agent-native` or `drizzle-orm`, and do **not**
 read `dist/*.d.ts` — everything you need is in the two stub files.
 
-## Enable the data layer (once)
+## Add app data
 
 `drizzle-orm`, `drizzle-kit`, `drizzle.config.ts`, and the `pnpm db:generate` /
 `pnpm db:migrate` scripts already ship — do not re-add them.
 
-1. Add a table to `drizzle/schema.ts` (an example is commented in the file).
-2. Uncomment the wiring in `server/db.ts`.
-3. Run `pnpm db:generate` to create the migration, then `pnpm db:migrate` to
-   apply it.
+1. Add a table to `db/schema.ts` using `drizzle-orm/pg-core`.
+2. Use `getDb()` and `schema` from `server/db.ts` in your actions.
+3. Run `pnpm db:generate --name <descriptive_name>` and commit the generated
+   migration in `netlify/database/migrations`. Netlify applies it at deployment.
+   Use `netlify db status` to inspect migration state. Keep applied migrations
+   immutable and roll forward with new migrations.
 4. Copy the CRUD pattern from `drizzle/crud-action-example.ts` into
    `actions/<name>.ts`. **One action per file, default-exported** — the four
    `export const ...Example` blocks in that reference each become their own

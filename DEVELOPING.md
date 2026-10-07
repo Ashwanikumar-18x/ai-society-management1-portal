@@ -229,11 +229,11 @@ agentChat.submit("Generate something");
 
 ## Database & Environment Variables
 
-Local development uses PGlite at `data/pglite`. For production and shared environments, set `DATABASE_URL` to a persistent hosted PostgreSQL database.
+Local framework development uses PGlite at `data/pglite`. For production and shared environments, the site's Netlify Database supplies `NETLIFY_DB_URL`, which is mapped to `DATABASE_URL` at startup. The legacy `NETLIFY_DATABASE_URL` and explicit `DATABASE_URL` remain supported.
 
 Real credential values belong only in local `.env` files, deployment configuration, or registered secrets/settings UI. Never commit, document, log, return, paste, or include real keys, tokens, webhook URLs, signing secrets, or private data in examples; use empty values or obvious placeholders.
 
-When adding app data, define tables with `@agent-native/core/db/schema` helpers and use Drizzle's query builder for reads/writes. Keep SQL PostgreSQL-compatible and reserve raw SQL for additive migrations, health checks, or carefully scoped maintenance.
+When adding app data, define PostgreSQL tables in `db/schema.ts` and use the Netlify Drizzle client from `server/db.ts` for reads/writes. Generate migrations with `pnpm db:generate --name <descriptive_name>` into `netlify/database/migrations`; Netlify applies them during deployment. Use Netlify CLI development emulation for the app's managed database. Framework-owned tables still use the Agent-Native release migration runner. Keep SQL PostgreSQL-compatible and reserve raw SQL for additive migrations, health checks, or carefully scoped maintenance.
 
 | Variable        | Required                     | Description                                                                   |
 | --------------- | ---------------------------- | ----------------------------------------------------------------------------- |

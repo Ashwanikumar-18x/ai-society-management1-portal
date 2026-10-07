@@ -1,3 +1,4 @@
+import "./scripts/configure-database-env.mjs";
 import { agentNative } from "@agent-native/core/vite";
 import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";

@@ -1,3 +1,4 @@
+import "../../scripts/configure-database-env.mjs";
 import { defineAppConfig } from "@agent-native/core/server";
 
 // Refuse opt-in default plugins so a blank app doesn't boot Slack/Telegram/etc
